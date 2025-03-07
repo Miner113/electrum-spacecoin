@@ -3,7 +3,6 @@ name: Spacecoin Electrum CI
 on: [push, pull_request]
 
 jobs:
-
   linux-appimage:
     name: Linux Build-Appimage
     runs-on: ubuntu-latest
@@ -15,10 +14,18 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          sudo apt-get remove php7.1-fpm php7.2-fpm php7.3-fpm php7.4-fpm php7.3-common php7.4-common
+          # Проверка и удаление старых версий PHP
+          for package in php7.1-fpm php7.2-fpm php7.3-fpm php7.4-fpm php7.3-common php7.4-common; do
+              if dpkg -l | grep -q $package; then
+                  sudo apt-get remove -y $package
+              else
+                  echo "$package is not installed."
+              fi
+          done
+
+          # Обновление и установка зависимостей
           sudo apt-get update
           sudo ACCEPT_EULA=Y apt-get upgrade -y
-          sudo apt-get update
           sudo apt-get install -q \
                  python3 \
                  python3-dev \
@@ -28,16 +35,18 @@ jobs:
                  pyqt5-dev-tools \
                  python-requests \
                  gettext \
-                 python3-setuptools \
                  protobuf-compiler \
                  libusb-1.0-0-dev \
                  libudev-dev -y
+
+          # Установка Python зависимостей
           python3 -m pip install setuptools wheel
           python3 -m pip install pytest
           python3 -m pip install .[full]
           pyrcc5 icons.qrc -o gui/qt/icons_rc.py
           protoc --proto_path=lib/ --python_out=lib/ lib/paymentrequest.proto
           ./contrib/make_locale
+
       - name: Build (Linux/Appimage)
         run: |
           cd contrib/deterministic-build
@@ -53,6 +62,7 @@ jobs:
                           electrum-spacecoin-appimage-builder-img \
                           ./build.sh
           tar -czvf electrum-spacecoin-appimage.tar.gz dist/*.AppImage
+
       - name: Upload electrum.Appiamge as artifact
         uses: actions/upload-artifact@v4
         with:
