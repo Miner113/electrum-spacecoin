@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
 
       - name: Update and build deps (Linux-Appimage)
         env:
@@ -54,7 +54,7 @@ jobs:
                           ./build.sh
           tar -czvf electrum-spacecoin-appimage.tar.gz dist/*.AppImage
       - name: Upload electrum.Appiamge as artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: electrum-spacecoin-linux-${{ github.sha }}.AppImage.tar.gz
           path: ./electrum-spacecoin-appimage.tar.gz
@@ -104,7 +104,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
 
       - name: Build (MacOS)
         run: |
@@ -112,7 +112,7 @@ jobs:
           contrib/build-osx/build-gha.sh
           tar -czvf electrum-spacecoin-macos.dmg.tar.gz contrib/build-osx/dist/*.dmg
       - name: Upload electrum.dmg as artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: electrum-spacecoin-macos-${{ github.sha }}.dmg.tar.gz
           path: ./electrum-spacecoin-macos.dmg.tar.gz
@@ -129,7 +129,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
 
       - name: Update (Linux-Wine)
         env:
@@ -167,7 +167,7 @@ jobs:
           cd ../..
           zip electrum-spacecoin-installer contrib/build-wine/dist/*.exe
       - name: Upload electrum-setup.exe as artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: electrum-spacecoin-win-${{ github.sha }}.zip
           path: ./electrum-spacecoin-installer.zip
