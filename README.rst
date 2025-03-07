@@ -9,7 +9,6 @@ Electrum-Spacecoin - Lightweight Spacecoin client
   Original Repo: https://github.com/zebra-lucky/electrum-zcash
 
 
-
 Getting started
 ===============
 
